@@ -5,18 +5,18 @@ MT_ctl::MT_ctl(){
 }
 MT_ctl::MT_ctl(uint8_t apin, uint8_t bpin, uint8_t enpin)
 {
-    MTa = apin;
-    MTb = bpin;
-    MTe = enpin;
+    this->MTa = apin;
+    this->MTb = bpin;
+    this->MTe = enpin;
 }
 
 void MT_ctl::init(int freq, uint8_t ch, uint8_t res){
-    pinMode(MTa, OUTPUT);
-    pinMode(MTb, OUTPUT);
-    pinMode(MTe, OUTPUT);
+    pinMode(this->MTa, OUTPUT);
+    pinMode(this->MTb, OUTPUT);
+    pinMode(this->MTe, OUTPUT);
     ledcSetup(ch, freq, res);
-    ledcAttachPin(MTe, ch);
-    MT_ch = ch;
+    ledcAttachPin(this->MTe, ch);
+    this->MT_ch = ch;
     curentSpeed = 200;
 
 }
@@ -35,37 +35,37 @@ void MT_ctl::test(){
 }
 
 void MT_ctl::forward(u_int8_t speed){
-    digitalWrite(MTa,HIGH);
-    digitalWrite(MTb,LOW);
-    ledcWrite(MT_ch,speed);
+    digitalWrite(this->MTa, HIGH);
+    digitalWrite(this->MTb, LOW);
+    ledcWrite(this->MT_ch, speed);
 }
 void MT_ctl::forward(){
-    digitalWrite(MTa,HIGH);
-    digitalWrite(MTb,LOW);
-    ledcWrite(MT_ch,this-> curentSpeed);
+    digitalWrite(this->MTa, HIGH);
+    digitalWrite(this->MTb, LOW);
+    ledcWrite(this->MT_ch, this->curentSpeed);
 }
 
 void MT_ctl::backward(u_int8_t speed){
-    digitalWrite(MTb,HIGH);
-    digitalWrite(MTa,LOW);
-    ledcWrite(MT_ch, this-> curentSpeed);
+    digitalWrite(this->MTb, HIGH);
+    digitalWrite(this->MTa, LOW);
+    ledcWrite(this->MT_ch, speed);
 }
 void MT_ctl::backward(){
-    digitalWrite(MTb,HIGH);
-    digitalWrite(MTa,LOW);
-    ledcWrite(MT_ch,200);
+    digitalWrite(this->MTb, HIGH);
+    digitalWrite(this->MTa, LOW);
+    ledcWrite(this->MT_ch, this->curentSpeed);
 }
 
 void MT_ctl::standby(){
-    digitalWrite(MTa,LOW);
-    digitalWrite(MTb,LOW);
+    digitalWrite(this->MTa, LOW);
+    digitalWrite(this->MTb, LOW);
 }
 
 void MT_ctl::mbreak(){
-    digitalWrite(MTa,HIGH);
-    digitalWrite(MTb,HIGH);
+    digitalWrite(this->MTa, HIGH);
+    digitalWrite(this->MTb, HIGH);
 }
 
 void MT_ctl::set_speed(uint8_t dutycicle){
-    ledcWrite(MT_ch,dutycicle);
+    ledcWrite(this->MT_ch, dutycicle);
 }
