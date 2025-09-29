@@ -2,8 +2,9 @@
 #include <WiFi.h>
 #include <esp_now.h>
 
-uint8_t broadcastAddress[] = {0x08, 0x3A, 0xF2, 0x86, 0xF0, 0xF0};
+uint8_t broadcastAddress[] = {0xA8, 0x42, 0xE3, 0x4A, 0x50, 0x1C};
   //08:3A:F2:86:F0:F0
+  //A8:42:E3:4A:50:1C
 esp_now_peer_info_t peerInfo;
 
 
