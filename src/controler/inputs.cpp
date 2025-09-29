@@ -13,6 +13,7 @@ int old_y = 0;
 void input_setup()
 {
     pinMode(POT_1, INPUT);
+    pinMode(POT_2, INPUT);
     encoder.attachHalfQuad(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN);
     encoder.setCount(0);
     //we must initialize rotary encoder
@@ -62,20 +63,17 @@ void rotary_loop()
         rotary_onButtonClick();
         delay(10);
     }
-    x = prosesValues(analogRead(POT_1),true);
-    y = prosesValues(analogRead(POT_2),false);
+    joystickToMotor(POT_1,POT_2,x,y);
     if (x != old_x || y != old_y)
     {
         old_x = x ;
         old_y = y ;
         myData.x = x;
         myData.y = y;
-        Serial.printf("X: %d Y: %d \n",x,y);
+        Serial.printf("left: %d right: %d \n",x,y);
         serial_loop();
     }
 }
-
-
 
 void IRAM_ATTR readEncoderISR()
 {
@@ -83,24 +81,24 @@ void IRAM_ATTR readEncoderISR()
 
 }
 
-int prosesValues(int value, bool reverse)
-{
-  if (value >= 2200)
-  {
-    value = map(value, 2200, 4095, 127, 254);
-  }
-  else if (value <= 1800)
-  {
-    value = map(value, 1800, 0, 127, 0);  
-  }
-  else
-  {
-    value = 127;
-  }
+void joystickToMotor(int xInput, int yInput, int &leftMotor, int &rightMotor) {
+    // Map joystick input (0–4095) to -255 to 255
+    int x = analogRead(xInput);
+    int y = analogRead(yInput);
 
-  if (reverse)
-  {
-    value = 254 - value;
-  }
-  return value;
+    // Map joystick values from 0–1023 to -255 to +255
+    int mappedX = map(x, 0, 4095, -255, 255);
+    int mappedY = map(y, 0, 4095, -255, 255);
+
+      // Apply deadzone
+    if (abs(mappedX) < DEADZONE) mappedX = 0;
+    if (abs(mappedY) < DEADZONE) mappedY = 0;
+
+    // Differential drive mixing
+    int leftMotorSpeed = mappedY + mappedX;
+    int rightMotorSpeed = mappedY - mappedX;
+
+    // Clamp values to -255 to 255
+    leftMotor  = constrain((int)leftMotorSpeed, -255, 255);
+    rightMotor = constrain((int)rightMotorSpeed, -255, 255);
 }

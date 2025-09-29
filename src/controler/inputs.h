@@ -9,9 +9,10 @@
 #define BUZZER_PIN 33
 #define POT_1 32
 #define POT_2 33
+#define DEADZONE 50
 
 void input_setup();
 void rotary_onButtonClick();
 void rotary_loop();
 void IRAM_ATTR readEncoderISR();
-int prosesValues(int value, bool reverse);
+void joystickToMotor(int xInput, int yInput, int &leftMotor, int &rightMotor);
