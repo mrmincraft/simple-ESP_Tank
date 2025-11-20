@@ -15,14 +15,14 @@ void input_setup()
     pinMode(POT_1, INPUT);
     pinMode(POT_2, INPUT);
     encoder.attachHalfQuad(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN);
-    encoder.setCount(0);
+    encoder.setCount(1000);
     //we must initialize rotary encoder
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
     //set boundaries and if values should cycle or not
     //in this example we will set possible values between 0 and 1000;
-    bool circleValues = true;
-    rotaryEncoder.setBoundaries(0, 255, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+    bool circleValues = false;
+    rotaryEncoder.setBoundaries(1000, 2000, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
 
     /*Rotary acceleration introduced 25.2.2021.
    * in case range to select is huge, for example - select a value between 0 and 1000 and we want 785
@@ -55,6 +55,7 @@ void rotary_loop()
     {
             Serial.print("Value: ");
             Serial.println(rotaryEncoder.readEncoder());
+            myData.z = rotaryEncoder.readEncoder();
             serial_loop();
             
     }
@@ -95,10 +96,10 @@ void joystickToMotor(int xInput, int yInput, int &leftMotor, int &rightMotor) {
     if (abs(mappedY) < DEADZONE) mappedY = 0;
 
     // Differential drive mixing
-    int leftMotorSpeed = mappedY + mappedX;
-    int rightMotorSpeed = mappedY - mappedX;
+    //int leftMotorSpeed = mappedY + mappedX;
+    //int rightMotorSpeed = mappedY - mappedX;
 
     // Clamp values to -255 to 255
-    leftMotor  = constrain((int)leftMotorSpeed, -255, 255);
-    rightMotor = constrain((int)rightMotorSpeed, -255, 255);
+    leftMotor  = constrain((int)mappedX, -255, 255);
+    rightMotor = constrain((int)mappedY, -255, 255);
 }

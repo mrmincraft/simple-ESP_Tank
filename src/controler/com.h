@@ -5,8 +5,9 @@
 #include <esp_now.h>
 
 typedef struct struct_message {
-    uint8_t x;
-    uint8_t y;
+    int x;
+    int y;
+    uint16_t z;
 } struct_message;
 
 // Create a struct_message called myData
